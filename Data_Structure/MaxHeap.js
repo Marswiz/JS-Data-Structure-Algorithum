@@ -43,11 +43,11 @@ class MaxHeap {
     top() {
         return this.heap.length > 0 ? this.heap[0] : undefined;
     }
-    size() {
+    getSize() {
         return this.heap.length;
     }
     pick() {
-        this.swap(0, this.size() - 1);
+        this.swap(0, this.getSize() - 1);
         let r = this.heap.pop();
         this.down(0);
         return r;
