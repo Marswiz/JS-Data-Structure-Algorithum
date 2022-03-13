@@ -1,7 +1,7 @@
 class SegmentTree {
     constructor(arr = []) {
         this.arr = arr;
-        this.tree = new Array(4 * this.arr.length).fill(null);
+        this.tree = new Array(4 * this.arr.length).fill(null); // 4 * len
         this.build();
     }
     build(idx = 0, start = 0, end = this.arr.length - 1) {
@@ -11,7 +11,7 @@ class SegmentTree {
         }
         let leftIdx = 2 * idx + 1;
         let rightIdx = 2 * idx + 2;
-        let m = Math.floor((start + end) / 2);
+        let m = ((start + end) >> 1);
         // [start, m] [m+1, end]
         this.build(leftIdx, start, m);
         this.build(rightIdx, m + 1, end);
@@ -41,7 +41,7 @@ class SegmentTree {
         this.tree[idx] += delta;
         let leftIdx = 2 * idx + 1;
         let rightIdx = 2 * idx + 2;
-        let m = Math.floor((start + end) / 2);
+        let m = ((start + end) >> 1);
         this._treeUpdate(arrIdx, delta, leftIdx, start, m);
         this._treeUpdate(arrIdx, delta, rightIdx, m + 1, end);
     }
@@ -68,5 +68,4 @@ class SegmentTree {
 // test
 let arr = [1, 3, 5, 7, 9, 11];
 let tree = new SegmentTree(arr);
-console.log(tree.query(1,1));
-console.log(tree.query(1,0));
+console.log(tree.query(1,4));
