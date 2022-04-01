@@ -1,0 +1,40 @@
+let hs256 = require("crypto-js/hmac-sha256");
+let enc = require("crypto-js/enc-base64url");
+
+function Base64(str = '') {
+    let b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    let binary = [];
+    for (let i of str) binary.push(i.charCodeAt(0));
+    if (binary.length % 3 !== 0) {
+        while (binary.length % 3 !== 0) binary.push(0);
+    }
+    binary = binary.map(i => i.toString(2).padStart(8, '0'));
+    let res = [];
+    let cur = [];
+    let c = 0;
+    while (c < binary.length) {
+        while (cur.length < 3) cur.push(binary[c++]);
+        let str = cur.join('');
+        for (let i=0; i+6<=str.length; i+=6) {
+            res.push(b64[parseInt(str.slice(i, i+6), 2)]);
+        }
+        cur.length = 0;
+    }
+    return res.join('');
+}
+
+function JWT(payload = {}, secret = 'secret') {
+    const header = {
+        typ: 'JWT',
+        alg: 'HS256'
+    };
+    let a = Base64(JSON.stringify(header));
+    let b = Base64(JSON.stringify(payload));
+    let c = hs256(a+'.'+b, secret).toString(enc);
+    return a+'.'+b+'.'+c;
+}
+
+// test
+let payload = {name: 'Mars',sex: 'male'};
+
+console.log(JWT(payload, 'beijing'));
